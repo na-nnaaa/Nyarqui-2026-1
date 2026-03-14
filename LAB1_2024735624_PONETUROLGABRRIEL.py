@@ -1,7 +1,7 @@
 '''FALTA IMPLEMENTAR:
 
+    comentar funciones
     procesar_numero (basicamente la funcion que transforma un numero de una base a otra, 4 secciones, una para cada representacion)
-    es_digito_valido (un checker simple que tenga un string(?) con los numeros validos para cada base, 4 secciones/variables again)
     crear e integrar una funcion que maneje lo de si el numero total se pasa del rango decimal permitido, [32, 126], yo creo q puede ir en el mismo procesar_numero)
 
     ocupa snake_case papu q es convencion internacional pa python xdd
@@ -10,6 +10,16 @@
     y quiero ver el caso borde de si aparece un numero que se escapa de la base, se considera como un simbolo basura nomas? voy a preguntar en el foro
 
 '''
+def es_digito_valido (digito, base):
+    if base == 2 and digito in list(range(0, 1, 1)): return True
+
+    elif base == 8 and digito in list(range(0, 7, 1)): return True
+
+    elif base == 10 and digito in list(range(0, 9, 1)): return True
+
+    elif base == 16 and digito in list(range(0, 15, 1)): return True
+
+
 with open("notas_dm.txt", "r") as arch:
     while True:
         caracter = archivo.read(1)
@@ -38,3 +48,6 @@ with open("notas_dm.txt", "r") as arch:
                 procesar_numero(acumulador, base_actual)
                 acumulador = ""
                 base_actual = None 
+
+
+        
