@@ -1,5 +1,10 @@
-
 def string_a_int(numero): #transforma un string a int, basicamente lo mismo que int() de python
+
+    """
+    Convierte un string numérico a su valor entero (int).
+    Se basa en multiplicar cada 
+    dígito por 10 elevado a su posición (sistema decimal posicional).
+    """
     largo = len(numero) - 1
     numero_int = 0
     for digito in numero:
@@ -28,6 +33,12 @@ def string_a_int(numero): #transforma un string a int, basicamente lo mismo que 
     return numero_int
 
 def binario_a_decimal(numero): #recibe string pero retorna int (ver que conviene mas)
+
+    """
+    Convierte un string que representa un número binario a un string decimal.
+    Itera sobre el string multiplicando los '1' por 2 elevado a la 
+    posición correspondiente.
+    """
     largo = len(numero) - 1
     decimal = 0
     for digito in numero:
@@ -37,6 +48,11 @@ def binario_a_decimal(numero): #recibe string pero retorna int (ver que conviene
     return str(decimal)
 
 def binario_a_octal(numero): #recib string retornaa stringggggg
+
+    """
+    Convierte un string binario directamente a octal agrupando los bits de a 3,
+    leyendo de derecha a izquierda.
+    """
     octal = ""
     for i in range(len(numero), 0 , -3):
         inicio = i - 3 
@@ -64,6 +80,12 @@ def binario_a_octal(numero): #recib string retornaa stringggggg
     return octal[::-1]
     
 def binario_a_hexadecimal(numero): #recibe string y retorna string se asume igual que el numero es si o si uno valido
+
+    """
+    Convierte un string binario a hexadecimal agrupando los bits de a 4.
+    Implementado mediante evaluación exhaustiva (hardcodeadaxd) de cada bloque posible,
+    asegurando la conversión manual pura requerida.
+    """    
     hexadecimal = ""
     for i in range(len(numero), 0, -4):
         inicio = i - 4
@@ -112,6 +134,11 @@ def binario_a_hexadecimal(numero): #recibe string y retorna string se asume igua
     return hexadecimal
 
 def decimal_a_binario(numero): #recibe string retorna string
+
+    """
+    Convierte un string decimal a string binario utilizando el método
+    matemático de divisiones sucesivas por 2, guardando los restos.
+    """
     continuar = True
     numero_int = string_a_int(numero)
     binario =""
@@ -124,6 +151,12 @@ def decimal_a_binario(numero): #recibe string retorna string
     return binario[::-1]
 
 def octal_a_decimal (numero):
+
+    """
+    Convierte un string octal a string decimal.
+    Usa el sistema posicional donde cada dígito se multiplica por 
+    8 elevado a su posición.
+    """
     largo = len(numero) - 1
     decimal = 0
     for digito in numero:
@@ -133,6 +166,11 @@ def octal_a_decimal (numero):
     return str(decimal)
 
 def decimal_a_octal(numero): #recibe string retorna string
+
+    """
+    Convierte un string decimal a string octal utilizando divisiones 
+    sucesivas por 8 y rescatando los restos generados.
+    """
     numero_int = string_a_int(numero)
     octal = ""
     resto = 0
@@ -154,6 +192,12 @@ def decimal_a_octal(numero): #recibe string retorna string
     return octal[::-1]
 
 def decimal_a_hexadecimal(numero):#recibe string retor string
+
+    """
+    Convierte un string decimal a un string hexadecimal mediante divisiones
+    sucesivas por 16. Los restos mayores a 9 se asignan manualmente a su
+    letra correspondiente (A-F).
+    """
     numero_int = string_a_int(numero)
     resto = 0
     hexadecimal = ""
@@ -181,6 +225,11 @@ def decimal_a_hexadecimal(numero):#recibe string retor string
     return hexadecimal[::-1]
 
 def hexadecimal_a_binario(numero):# retorna y recibe string
+
+    """
+    Convierte un string hexadecimal directamente a binario asignando
+    a cada carácter su bloque equivalente de 4 bits.
+    """
     binario = ""
     for digito in numero:
         if digito == "0" : binario += "0000"
@@ -202,7 +251,12 @@ def hexadecimal_a_binario(numero):# retorna y recibe string
     
     return binario
 
-def hexadecimal_a_decimal(numero): #string strins fskjfsflkjahsfñlkjashf
+def hexadecimal_a_decimal(numero): 
+
+    """
+    Convierte un string hexadecimal a string decimal empleando evaluación 
+    posicional (multiplicando por potencias de 16).
+    """
     largo = len(numero) - 1
     decimal = 0
     for digito in numero:
@@ -240,9 +294,13 @@ def hexadecimal_a_decimal(numero): #string strins fskjfsflkjahsfñlkjashf
         largo -= 1
     return str(decimal)
 
-
-
 def es_digito_valido (digito, base): 
+    """
+    Verifica si un carácter es válido para la base actual.
+    Esta función es el pilar de la regla para ignorar basura.
+    Permite detectar cuándo un número ha terminado y cuándo comienza
+    un carácter de "ruido" que debe interrumpir la captura de dígitos.
+    """
     if base == 2 and digito in "01": return True
     elif base == 8 and digito in "01234567": return True
     elif base == 10 and digito in "0123456789": return True
@@ -250,6 +308,11 @@ def es_digito_valido (digito, base):
     return False
 
 def transformar_letra_entero (char): #hexadecimal a decimal
+
+    """
+        Retorna el valor numérico base 10 de un caracter hexadecimal 
+        (ej: 'A' -> 10, 'F' -> 15) para facilitar cálculos algebraicos.
+    """
     digitos = "0123456789ABCDEF"
     entero = 0
     for i in digitos:
@@ -263,6 +326,15 @@ valores_extraidos = 0
 mensaje_final = ""
 
 def procesar_numero(numero, base_in, base_out):
+
+    """
+    Centraliza el procesamiento lógico:
+    1. Toma la cadena numérica extraída y la transforma a decimal.
+    2. Aplica "Filtrado por Rango" verificando que esté entre 32 y 126.
+    3. Si es válido, lo transforma a la base de salida que eligió el usuario (base_out).
+    4. Imprime el resultado en pantalla y añade la letra al mensaje final ASCII.
+    """
+
     global mensaje_final
     global valores_extraidos
 
@@ -314,40 +386,50 @@ print("[-] Filtrando ruido místico (valores fuera de rango ASCII)...")
 
 print(f"LISTA DE VALORES EXTRAÍDOS (Base {base_objetivo}):")
 print("--------------------------------------------------")
+try:
+    with open("notas_dm.txt", "r") as arch:
+        while True:
+            caracter = arch.read(1) 
+            if not caracter: #Fin del archivo
+                if acumulador: #Por si habia un numero acumulado antes de terminar el archivo
+                    procesar_numero(acumulador, base_actual, base_objetivo)
+                break 
 
-with open("notas_dm.txt", "r") as arch:
-    while True:
-        caracter = arch.read(1) 
-        if not caracter: #Fin del archivo
-            if acumulador: #Por si habia un numero acumulado antes de terminar el archivo
-                procesar_numero(acumulador, base_actual, base_objetivo)
-            break 
+            # 1- Es prefijo?
+            if caracter in ["*", "&", "#", "!"]:
+                if acumulador:
+                    # Check y procesamiento por si ya se venia armando un numero
+                    procesar_numero(acumulador, base_actual, base_objetivo)
 
-        # 1- Es prefijo?
-        if caracter in ["*", "&", "#", "!"]:
-            if acumulador:
-                # Check y procesamiento por si ya se venia armando un numero
-                procesar_numero(acumulador, base_actual, base_objetivo)
+                if caracter == "*": base_actual = 2
+                elif caracter == "&": base_actual = 8
+                elif caracter == "#": base_actual = 10
+                elif caracter == "!": base_actual = 16
 
-            if caracter == "*": base_actual = 2
-            elif caracter == "&": base_actual = 8
-            elif caracter == "#": base_actual = 10
-            elif caracter == "!": base_actual = 16
+                acumulador = "" #Se limpia para acumular el nuevo numero
+            
+            # 2- Es digito valido para la base?
+            elif es_digito_valido(caracter, base_actual):
+                acumulador += caracter
 
-            acumulador = "" #Se limpia para acumular el nuevo numero
-        
-        # 2- Es digito valido para la base?
-        elif es_digito_valido(caracter, base_actual):
-            acumulador += caracter
+            # 3- Es basura? (asumiendo que un numero invalido para la base tmb es basura)
+            else: 
+                if acumulador:
+                    procesar_numero(acumulador, base_actual, base_objetivo)
+                    acumulador = ""
+                    base_actual = None
 
-        # 3- Es basura? (asumiendo que un numero invalido para la base tmb es basura)
-        else: 
-            if acumulador:
-                procesar_numero(acumulador, base_actual, base_objetivo)
-                acumulador = ""
-                base_actual = None 
+except FileNotFoundError:
+    print("[-] ERROR CRÍTICO: No se pudo encontrar el archivo 'notas_dm.txt'.")
+    print("[-] Asegúrate de que el archivo exista en la misma carpeta que este programa.")
+    print("[!] Abortando misión...")
+except Exception as e:
+    print(f"\n[-] ERROR CRÍTICO: Ocurrió un error inesperado al leer el archivo: {e}")
+    print("[!] Abortando misión...")
 
 print("--------------------------------------------------")
-print(f"\nMENSAJE DECODIFICADO:\n\"{mensaje_final}\"")
+
+if mensaje_final:
+    print(f"\nMENSAJE DECODIFICADO:\n\"{mensaje_final}\"")
 
         
