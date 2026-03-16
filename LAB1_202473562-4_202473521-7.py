@@ -1,36 +1,11 @@
-'''
-FALTA IMPLEMENTAR:
-
-    comentar funciones
-
-    procesar_numero (basicamente la funcion que transforma un numero de una base (base_in) a decimal, y de decimal a la base que se pide (base_out))
-        -en procesar_numero, ya hice la logica de base_in a decimal, tambien el checkeo de q el numero en decimal este entre 32 y 126 (inclusive) -> no estoy seguro de eso, hay q preguntar en el foro
-        -falta la logica de decimal a base_out y el print con: (deja el print en la funcion, no en el main)
-            1- el numero de valor (ya implementado con el global valores_extraidos)
-            2- el valor transformado en base_out
-            3- la representacion original en base_in (con su simbolo, ver runtime del pdf)
-        -transformar los valores (no se si desde el decimal o que) a ASCII (NI PERRA IDEA COMO XDDD)
-        -agregar el valor en ASCII al global msg_final
-        -printear el msg_final
-
-    en vola se me va algo, ocupa este espacio como bloc de notas asi puedo ver yo cuando me meta dsps de un commit tuyo
-
-    RECUERDA COMMITEAR ANTES DE APAGAR EL PC
-
-    ocupa snake_case papu q es convencion internacional pa python xdd
-    pone tu rol en el nombre del archivo
-
-
-    OJOOOOOO FALTA LA TRANSFORMACION HEXADECIMAL A OCTAL AHI TE EXPLICO PQ
-    USA EL ARCHIVO COSO PARA DEBUGEAR IKEROVICH BESITOS
-    '''
-
 
 def string_a_int(numero): #transforma un string a int, basicamente lo mismo que int() de python
     largo = len(numero) - 1
     numero_int = 0
     for digito in numero:
-        if digito == "1":
+        if digito == "0":
+            numero_int += (0 * (10**largo))
+        elif digito == "1":
             numero_int += (1 * (10**largo))
         elif digito == "2":
             numero_int += (2 * (10**largo))
@@ -148,6 +123,15 @@ def decimal_a_binario(numero): #recibe string retorna string
         if numero_int == 0: continuar = False
     return binario[::-1]
 
+def octal_a_decimal (numero):
+    largo = len(numero) - 1
+    decimal = 0
+    for digito in numero:
+        valor = transformar_letra_entero(digito)
+        decimal += valor * (8**largo)
+        largo -= 1
+    return str(decimal)
+
 def decimal_a_octal(numero): #recibe string retorna string
     numero_int = string_a_int(numero)
     octal = ""
@@ -262,7 +246,7 @@ def es_digito_valido (digito, base):
     elif base == 8 and digito in "01234567": return True
     elif base == 10 and digito in "0123456789": return True
     elif base == 16 and digito in "0123456789ABCDEF": return True
-    return 0
+    return False
 
 def transformar_letra_entero (char): #hexadecimal a decimal
     digitos = "0123456789ABCDEF"
@@ -278,23 +262,38 @@ valores_extraidos = 0
 mensaje_final = ""
 
 def procesar_numero(numero, base_in, base_out):
-    global msg_final
+    global mensaje_final
     global valores_extraidos
-    global acumulador
 
-    decimal = 0
-    potencia = 0
-    for i in range(len(numero)-1, -1, -1):
-        digito_entero = transformar_letra_entero(numero[i])
-        valor_decimal += digito_entero * (base_in ** exponente)
-        exponente += 1 # Se mueve la posicion a la izquierda en el numero
+    if base_in == 2:
+        val_decimal_str = binario_a_decimal(numero)
+    elif base_in == 8:
+        val_decimal_str = octal_a_decimal(numero)
+    elif base_in == 10:
+        val_decimal_str = numero
+    elif base_in == 16:
+        val_decimal_str = hexadecimal_a_decimal(numero)
 
-    if 32 <= valor_decimal <= 126:
+    val_decimal_int = string_a_int(val_decimal_str)
+
+    if 32 <= val_decimal_int <= 126:
         valores_extraidos += 1
-    else:
-        return
+    
+        if base_out == 2:
+            res_visual = decimal_a_binario(val_decimal_str)
+        elif base_out == 8:
+            res_visual = decimal_a_octal(val_decimal_str)
+        elif base_out == 10:
+            res_visual = val_decimal_str
+        elif base_out == 16:
+            res_visual = decimal_a_hexadecimal(val_decimal_str)
 
+        nombres = {2: "Binario", 8: "Octal", 10: "Decimal", 16: "Hexadecimal"}
+        simbolos = {2: "*", 8: "&", 10: "#", 16: "!"}
 
+        print(f"Valor {valores_extraidos}: {res_visual} (Original: {nombres[base_in]} {simbolos[base_in]}{numero})")
+
+        mensaje_final += chr(decimal_int)
 
 
 print("--- DECODIFICADOR DE NOTAS ---")
@@ -317,7 +316,7 @@ print("--------------------------------------------------")
 
 with open("notas_dm.txt", "r") as arch:
     while True:
-        caracter = arch.read(1) #captura un caracter
+        caracter = arch.read(1) 
         if not caracter: #Fin del archivo
             if acumulador: #Por si habia un numero acumulado antes de terminar el archivo
                 procesar_numero(acumulador, base_actual, base_objetivo)
@@ -327,9 +326,8 @@ with open("notas_dm.txt", "r") as arch:
         if caracter in ["*", "&", "#", "!"]:
             if acumulador:
                 # Check y procesamiento por si ya se venia armando un numero
-                #
-                # procesar_numero(acumulador, base_actual, base_objetivo)
-                print(acumulador)
+                procesar_numero(acumulador, base_actual, base_objetivo)
+
             if caracter == "*": base_actual = 2
             elif caracter == "&": base_actual = 8
             elif caracter == "#": base_actual = 10
@@ -340,15 +338,15 @@ with open("notas_dm.txt", "r") as arch:
         # 2- Es digito valido para la base?
         elif es_digito_valido(caracter, base_actual):
             acumulador += caracter
-            print(acumulador)
 
         # 3- Es basura? (asumiendo que un numero invalido para la base tmb es basura)
         else: 
             if acumulador:
-                #procesar_numero(acumulador, base_actual, base_objetivo)
-                print(acumulador)
+                procesar_numero(acumulador, base_actual, base_objetivo)
                 acumulador = ""
                 base_actual = None 
 
+print("--------------------------------------------------")
+print(f"\nMENSAJE DECODIFICADO:\n\"{mensaje_final}\"")
 
         
