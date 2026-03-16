@@ -150,6 +150,7 @@ def decimal_a_octal(numero): #recibe string retorna string
 
         numero_int = numero_int // 8
         if numero_int == 0 : break
+    
     return octal[::-1]
 
 def decimal_a_hexadecimal(numero):#recibe string retor string
@@ -293,7 +294,7 @@ def procesar_numero(numero, base_in, base_out):
 
         print(f"Valor {valores_extraidos}: {res_visual} (Original: {nombres[base_in]} {simbolos[base_in]}{numero})")
 
-        mensaje_final += chr(decimal_int)
+        mensaje_final += chr(val_decimal_int)
 
 
 print("--- DECODIFICADOR DE NOTAS ---")
